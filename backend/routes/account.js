@@ -6,7 +6,7 @@ const { default: mongoose } = require('mongoose');
 
 router.get(('/balance'),authMiddleware,async(req,res)=>{
     const account = await Account.findOne({
-      userid: req.userid
+      userid: req.userId
     })
 
     if (!account) {
@@ -28,7 +28,14 @@ const session = await mongoose.startSession();
 
   const sendTo = req.body.to;
   const amount = req.body.amount;
-  const account = await Account.findOne({ userid: req.userid }).session(session);
+  const account = await Account.findOne({ userid: req.userId }).session(session);
+
+  if (!account) {
+    await session.abortTransaction();
+    return res.status(404).json({
+      message: "Account not found"
+    });
+  }
    
   if(amount> account.balance){
       await session.abortTransaction();
@@ -45,8 +52,8 @@ const session = await mongoose.startSession();
   })
  }
 
- await Account.updateOne({userid: req.userid},{$inc:{balance:-amount}}).session(session);
- await Account.updateOne({userid: req.sendTo},{$inc:{balance:amount}}).session(session);
+ await Account.updateOne({userid: req.userId},{$inc:{balance:-amount}}).session(session);
+ await Account.updateOne({userid: sendTo},{$inc:{balance:amount}}).session(session);
 await session.commitTransaction();
 res.status(400).json({
   message : "transfer succesful"
