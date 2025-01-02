@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://kamaldeepsingh:Luckysaini1@cluster0.bmbyy.mongodb.net/');
 
-const {schema}  = mongoose;
+const {Schema}  = mongoose;
 
-const userSchema = new schema( {
+const userSchema = new Schema( {
   firstName : {
     type : String,
     minLength : 3,
@@ -36,7 +36,7 @@ const userSchema = new schema( {
   },
 })
 
-const  accountSchema = new schema({
+const  accountSchema = new Schema({
          userid : {
             type : mongoose.Schema.Types.ObjectId,
             ref: 'User',
