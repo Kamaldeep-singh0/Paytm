@@ -1,9 +1,21 @@
 
+import React from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Signup from './routes/Signup'
+
+const appRouter = createBrowserRouter([
+  {
+    path:"/",
+    element :<Signup/>,
+   },
+])
+
 function App() {
 
   return (
     <div>
-        Hello world
+      <RouterProvider router={appRouter}/>
+      
     </div>
   )
 }
